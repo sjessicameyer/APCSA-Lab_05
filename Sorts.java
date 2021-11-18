@@ -38,6 +38,7 @@ public class Sorts
     
     public static int Selection(int[] list)
     {
+      int scount = 0;
       for (int n = list.length; n > 1; n--)
       {
         // Find the index iMax of the largest element
@@ -46,6 +47,7 @@ public class Sorts
         int iMax = 0;
         for (int i = 1; i < n; i++)
         {
+          scount++;
           if (list[i] > list[iMax])
             iMax = i;
         }
@@ -54,11 +56,13 @@ public class Sorts
         
         // Decrement n (accomplished by n-- in the for loop).
       }
-      return 0;
+      return scount;
     }
+
 
     public static int Merge(int[] list, int from, int middle, int to)
     {
+      int mcount=0;
       temp = new int[list.length];
       int i = from, j = middle + 1, k = from;
       
@@ -76,6 +80,7 @@ public class Sorts
           j++;
         }
         k++;
+        mcount++;
       }
       
       // Copy the tail of the first half, if any, into temp:
@@ -84,6 +89,7 @@ public class Sorts
         temp[k] = list[i];     // or simply temp[k++] = a[i++]
         i++;
         k++;
+        
       }
       
       // Copy the tail of the second half, if any, into temp:
@@ -92,18 +98,22 @@ public class Sorts
         temp[k] = list[j];     // or simply temp[k++] = a[j++]
         j++;
         k++;
+        
       }
       
       // Copy temp back into a
       for (k = from; k <= to; k++)
         list[k] = temp[k];
-      return 0;
+      return mcount;
     }
 	
 	public static int mergeSort(int[] list, int from, int to)
 	{
+    int mcount=0;
+
 		if (to - from < 2)            // Base case: 1 or 2 elements
 		{
+      mcount++;
 			if (to > from && list[to] < list[from])
 			{
 				int listTemp = list[to];  // swap a[to] and a[from]
@@ -114,15 +124,17 @@ public class Sorts
 		else                            // Recursive case
 		{
 			int middle = (from + to) / 2;
-			mergeSort(list, from, middle);
-			mergeSort(list, middle + 1, to);
-			Merge(list, from, middle, to);
+			mcount=mcount+mergeSort(list, from, middle);
+			mcount=mcount+mergeSort(list, middle + 1, to);
+			mcount=mcount+Merge(list, from, middle, to);
 		}
-		return 0;
+    return mcount;
 	}
 	
   public static int QuickSort(int[] list, int from, int to)
   {
+    int qcount = 0;
+
     if (from >= to)
 			return 0;
 		
@@ -138,12 +150,17 @@ public class Sorts
 		int j = to;
 		while (i <= j)
 		{
-			if (list[i] <= list[p])
+			if (list[i] <= list[p]){
 				i++;
-			else if (list[j] >= list[p])
+        qcount++;
+      }else if (list[j] >= list[p]){
 				j--;
-			else
+        qcount++;
+        qcount++;
+      }else
 			{
+        qcount++;
+        qcount++;
 				swap (list, i, j);
 				i++;
 				j--;
@@ -151,39 +168,143 @@ public class Sorts
 		}
 		
 		// Finish partitioning:
-		
 		if (p < j)    // place the pivot in its correct position
 		{
 			swap (list, j, p);
 			p = j;
+      qcount++;
 		}
 		else if (p > i)
 		{
+      qcount++;
+      qcount++;
 			swap (list, i, p);
 			p = i;
 		}
 		
 		// Sort recursively:
-		QuickSort(list, from, p - 1);
-		QuickSort(list, p + 1, to);
+		qcount=qcount+QuickSort(list, from, p - 1);
+		qcount=qcount+QuickSort(list, p + 1, to);
 		
-		return 0;
+		return qcount;
 	}
     
-  public static int QuickMid(int[] list)
+  public static int QuickSortMid(int[] list, int from, int to)
   {
 	
-	  // You add code Here
-	
-		return 0;
+	  int qcount = 0;
+
+    if (from >= to)
+			return 0;
+		
+		// Choose pivot list[p]:
+		int p =(from+to)/2;
+		// The choice of the pivot location may vary:
+		// you can also use p = from or p = to or use 
+		//  a fancier method, say, the median of the above three.
+		
+		// Partition:
+		
+		int i = from;
+		int j = to;
+		while (i <= j)
+		{
+			if (list[i] <= list[p]){
+				i++;
+        qcount++;
+      }else if (list[j] >= list[p]){
+				j--;
+        qcount++;
+        qcount++;
+      }else
+			{
+        qcount++;
+        qcount++;
+				swap (list, i, j);
+				i++;
+				j--;
+			}
+		}
+		
+		// Finish partitioning:
+		if (p < j)    // place the pivot in its correct position
+		{
+			swap (list, j, p);
+			p = j;
+      qcount++;
+		}
+		else if (p > i)
+		{
+      qcount++;
+      qcount++;
+			swap (list, i, p);
+			p = i;
+		}
+		
+		// Sort recursively:
+		qcount=qcount+QuickSortMid(list, from, p - 1);
+		qcount=qcount+QuickSortMid(list, p + 1, to);
+		
+		return qcount;
   }
     
-	public static int QuickRandom(int[] list)
+	public static int QuickSortRandom(int[] list, int from, int to)
   {
-    
-	  // You add code Here
-    	
-		return 0;
+	
+	  int qcount = 0;
+
+    if (from >= to)
+			return 0;
+		
+		// Choose pivot list[p]:
+		int p = from+ListSetup.rand.nextInt(to-from);
+		// The choice of the pivot location may vary:
+		// you can also use p = from or p = to or use 
+		//  a fancier method, say, the median of the above three.
+		
+		// Partition:
+		
+		int i = from;
+		int j = to;
+		while (i <= j)
+		{
+			if (list[i] <= list[p]){
+				i++;
+        qcount++;
+      }else if (list[j] >= list[p]){
+				j--;
+        qcount++;
+        qcount++;
+      }else
+			{
+        qcount++;
+        qcount++;
+				swap (list, i, j);
+				i++;
+				j--;
+			}
+		}
+		
+		// Finish partitioning:
+		if (p < j)    // place the pivot in its correct position
+		{
+			swap (list, j, p);
+			p = j;
+      qcount++;
+		}
+		else if (p > i)
+		{
+      qcount++;
+      qcount++;
+			swap (list, i, p);
+			p = i;
+		}
+		
+		// Sort recursively:
+		qcount=qcount+QuickSortRandom(list, from, p - 1);
+		qcount=qcount+QuickSortRandom(list, p + 1, to);
+		
+		return qcount;
   }
     
   private static void swap (int[] list, int a, int b)
